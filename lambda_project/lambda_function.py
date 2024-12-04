@@ -1,7 +1,6 @@
 import boto3
 from textblob import TextBlob
 import datetime
-import json
 
 # Python runtime: 3.13
 
@@ -10,11 +9,8 @@ table = dynamodb.Table('reviews-2021320133')
 ses = boto3.client('ses')
 
 def lambda_handler(event, context):
-    # Parse the JSON body
-    body = json.loads(event['body'])
-
-    user_name = body['user_name']
-    review_text = body['review']
+    user_name = event['user_name']
+    review_text = event['review']
     timestamp = datetime.datetime.now().isoformat()
     sentiment = ""
 
