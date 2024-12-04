@@ -4,7 +4,7 @@ import random
 from datetime import datetime, timedelta
 
 # API Gateway Endpoint (Replace with your actual endpoint)
-api_url = "your_actual_api_endpoint_here"
+api_url = "https://6hrhts0i7i.execute-api.us-east-1.amazonaws.com/reviews"
 
 
 # Sample review templates
@@ -59,7 +59,7 @@ def send_random_reviews(num_reviews):
         review_data = generate_random_review()
         response = requests.post(api_url, json=review_data)
         print(f"Sent: {review_data}")
-        print(f"Response: {response.status_code}, {response.json()}")
+        print(f"Response: {response.status_code}, {response.content.decode()}")
 
 # Generate and send 20 random reviews
 send_random_reviews(20)
