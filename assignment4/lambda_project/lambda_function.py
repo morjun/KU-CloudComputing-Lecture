@@ -9,8 +9,8 @@ table = dynamodb.Table('reviews-2021320133')
 ses = boto3.client('ses')
 
 def lambda_handler(event, context):
-    user_name = event['user_name']
-    review_text = event['review']
+    user_name = event.get('user_name')
+    review_text = event.get('review')
     timestamp = datetime.datetime.now().isoformat()
     sentiment = ""
 
@@ -20,22 +20,18 @@ def lambda_handler(event, context):
     if not review_text:
         return {"statusCode": 400, "body": "Review text is required"}
 
-    print(f"Lambda Function ARN: {context.invoked_function_arn}")
-    print(f"Request ID: {context.aws_request_id}")
-    remaining_time = context.get_remaining_time_in_millis() / 1000  # ms -> s
-    print(f"Remaining time: {remaining_time} seconds")
-    print(f"Log Group: {context.log_group_name}, Log Stream: {context.log_stream_name}")
-
     # Sentiment Analysis
     polarity = TextBlob(review_text).sentiment.polarity
     '''
     Todo1: Use the Polarity value to determine the sentiment of the review, 
     with the standard set to 0.
     '''
-    if polarity >= 0:
+    if polarity > 0:
         sentiment = "Positive"
     elif polarity < 0:
         sentiment = "Negative"
+    else:
+        sentiment = "Neutral"
 
     # Save to DynamoDB
     try:
